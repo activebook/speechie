@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Speechie Settings</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      width: 300px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Speechie Settings</h1>
+  <div class="form-group">
+    <label for="api-key">API Key</label>
+    <input type="text" id="api-key">
+  </div>
+  <div class="form-group">
+    <label for="voice-selection">Voice Selection</label>
+    <select id="voice-selection">
+      <optgroup label="American English">
+        <option value="Autumn">Autumn (Female)</option>
+        <option value="Melody">Melody (Female)</option>
+        <option value="Hannah">Hannah (Female)</option>
+        <option value="Emily">Emily (Female)</option>
+        <option value="Ivy">Ivy (Female)</option>
+        <option value="Kaitlyn">Kaitlyn (Female)</option>
+        <option value="Luna">Luna (Female)</option>
+        <option value="Willow">Willow (Female)</option>
+        <option value="Lauren">Lauren (Female)</option>
+        <option value="Sierra">Sierra (Female)</option>
+        <option value="Noah">Noah (Male)</option>
+        <option value="Jasper">Jasper (Male)</option>
+        <option value="Caleb">Caleb (Male)</option>
+        <option value="Ronan">Ronan (Male)</option>
+        <option value="Ethan">Ethan (Male)</option>
+        <option value="Daniel">Daniel (Male)</option>
+        <option value="Zane">Zane (Male)</option>
+      </optgroup>
+      <optgroup label="Chinese">
+        <option value="Mei">Mei (Female)</option>
+        <option value="Lian">Lian (Female)</option>
+        <option value="Ting">Ting (Female)</option>
+        <option value="Jing">Jing (Female)</option>
+        <option value="Wei">Wei (Male)</option>
+        <option value="Jian">Jian (Male)</option>
+        <option value="Hao">Hao (Male)</option>
+        <option value="Sheng">Sheng (Male)</option>
+      </optgroup>
+      <optgroup label="Spanish">
+        <option value="Lucía">Lucía (Female)</option>
+        <option value="Mateo">Mateo (Male)</option>
+        <option value="Javier">Javier (Male)</option>
+      </optgroup>
+      <optgroup label="French">
+        <option value="Élodie">Élodie (Female)</option>
+      </optgroup>
+      <optgroup label="Hindi">
+        <option value="Ananya">Ananya (Female)</option>
+        <option value="Priya">Priya (Female)</option>
+        <option value="Arjun">Arjun (Male)</option>
+        <option value="Rohan">Rohan (Male)</option>
+      </optgroup>
+      <optgroup label="Italian">
+        <option value="Giulia">Giulia (Female)</option>
+        <option value="Luca">Luca (Male)</option>
+      </optgroup>
+      <optgroup label="Portuguese">
+        <option value="Camila">Camila (Female)</option>
+        <option value="Thiago">Thiago (Male)</option>
+        <option value="Rafael">Rafael (Male)</option>
+      </optgroup>
+    </select>
+  </div>
+  <button id="save-button">Save</button>
+  <script src="options.js"></script>
+</body>
+</html>
