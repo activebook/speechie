@@ -22,9 +22,10 @@ Speechie is a Chrome extension that provides text-to-speech functionality direct
 3. Use the player controls (Alt+A) to pause, resume, or stop playback
 
 ## Screenshots
-![Extension Overview](howto/extension.png)
-![Settings](howto/setting.png)
-![Result](howto/result.png)
+
+| ![Extension Overview](howto/extension.png) | ![Settings](howto/setting.png) | ![Result](howto/result.png) |
+|:---:|:---:|:---:|
+| Extension Overview | Settings | Result |
 
 ## Contributing
 1. Fork the repository
