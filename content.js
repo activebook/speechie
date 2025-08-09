@@ -8,14 +8,34 @@ let initialY = 0;
 let xOffset = 0;
 let yOffset = 0;
 
+// Load saved position
+function loadSavedPosition() {
+  const savedPos = localStorage.getItem('speechie-player-position');
+  if (savedPos) {
+    const { x, y } = JSON.parse(savedPos);
+    xOffset = x;
+    yOffset = y;
+    currentX = x;
+    currentY = y;
+    return { x, y };
+  }
+  return { x: 0, y: 0 };
+}
+
 // Create floating player HTML
 function createFloatingPlayer() {
   if (speechiePlayer) {
     speechiePlayer.remove();
   }
 
+  const savedPosition = loadSavedPosition();
+  xOffset = savedPosition.x;
+  yOffset = savedPosition.y;
+  currentX = savedPosition.x;
+  currentY = savedPosition.y;
+
   const playerHTML = `
-    <div class="speechie-floating-player" id="speechie-floating-player">
+    <div class="speechie-floating-player" id="speechie-floating-player" style="transform: translate3d(${currentX}px, ${currentY}px, 0)">
       <div class="speechie-title-bar" id="speechie-title-bar">
         <span class="speechie-title" style="text-align: left; margin-left: 12px;">Speechie</span>
         <span class="speechie-progress-info" id="speechie-progress-info" style="position: absolute; left: 50%; transform: translateX(-50%);">Ready</span>
@@ -461,12 +481,20 @@ function dragStart(e) {
   player.classList.add('speechie-dragging');
 }
 
+function savePosition() {
+  localStorage.setItem('speechie-player-position', JSON.stringify({
+    x: currentX,
+    y: currentY
+  }));
+}
+
 function dragEnd(e) {
   const player = document.getElementById('speechie-floating-player');
   initialX = currentX;
   initialY = currentY;
   isDragging = false;
   player.classList.remove('speechie-dragging');
+  savePosition();
 }
 
 function drag(e) {
