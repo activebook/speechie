@@ -23,16 +23,9 @@ Speechie is a Chrome extension that provides text-to-speech functionality direct
 
 ## Screenshots
 
-| ![Extension Overview](howto/extension.png) | ![Settings](howto/setting.png) | ![Result](howto/result.png) |
-|:---:|:---:|:---:|
-| Extension Overview | Settings | Result |
+![Usage](howto/usage.png)
 
-## Contributing
-1. Fork the repository
-2. Create a new branch: `git checkout -b feature-name`
-3. Make your changes and commit them: `git commit -m "Add new feature"`
-4. Push to the branch: `git push origin feature-name`
-5. Submit a pull request
+![Settings](howto/settings.png)
 
 ## License
 MIT License
