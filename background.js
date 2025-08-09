@@ -116,8 +116,3 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     } catch (e) { /* Fail silently if the player isn't open */ }
   }
 });
-
-// This remains the same: clicking the icon opens the options page.
-chrome.action.onClicked.addListener(() => {
-  chrome.runtime.openOptionsPage();
-});
