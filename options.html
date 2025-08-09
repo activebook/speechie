@@ -1,103 +1,347 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Speechie Settings</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: sans-serif;
-      width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      width: 380px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 500px;
+      color: #333;
     }
+
+    .container {
+      background: white;
+      margin: 20px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 25px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .content {
+      padding: 30px 25px;
+    }
+
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 25px;
     }
-    label {
+
+    .form-group label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #667eea;
+      font-size: 16px;
+    }
+
     input[type="text"], select {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 15px 15px 15px 45px;
+      border: 2px solid #e1e5e9;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: #fafbfc;
     }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
+
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    select {
+      padding: 15px 45px 15px 45px;
       cursor: pointer;
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8"><path fill="%23667eea" d="M7 8L0 0h14z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 15px center;
     }
-    button:hover {
-      background-color: #45a049;
+
+    .voice-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .voice-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .voice-category {
+      background: white;
+      border: 1px solid #e1e5e9;
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .voice-category h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .voice-option {
+      padding: 8px 12px;
+      margin: 4px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+
+    .voice-option:hover {
+      background: #f0f2f5;
+    }
+
+    .voice-option input[type="radio"] {
+      margin-right: 8px;
+      accent-color: #667eea;
+    }
+
+    .save-button {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .save-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .save-button:active {
+      transform: translateY(0);
+    }
+
+    .api-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .api-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .api-link a:hover {
+      color: #764ba2;
+    }
+
+    .status-message {
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .status-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status-message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e1e5e9, transparent);
+      margin: 25px 0;
     }
   </style>
 </head>
 <body>
-  <h1>Speechie Settings</h1>
-  <div class="form-group">
-    <label for="api-key">API Key</label>
-    <input type="text" id="api-key">
+  <div class="container">
+    <div class="header">
+      <i class="fas fa-microphone-alt icon"></i>
+      <h1>Speechie Settings</h1>
+      <p>Configure your text-to-speech experience</p>
+    </div>
+    
+    <div class="content">
+      <div class="form-group">
+        <label for="api-key">API Key</label>
+        <div class="input-wrapper">
+          <i class="fas fa-key input-icon"></i>
+          <input type="text" id="api-key" placeholder="Enter your UnrealSpeech API key">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="form-group">
+        <label for="voice-selection">Voice Selection</label>
+        <div class="input-wrapper">
+          <i class="fas fa-user-voice input-icon"></i>
+          <select id="voice-selection">
+            <option value="">Select a voice...</option>
+            <optgroup label="🇺🇸 American English">
+              <option value="Autumn">Autumn (Female)</option>
+              <option value="Melody">Melody (Female)</option>
+              <option value="Hannah">Hannah (Female)</option>
+              <option value="Emily">Emily (Female)</option>
+              <option value="Ivy">Ivy (Female)</option>
+              <option value="Kaitlyn">Kaitlyn (Female)</option>
+              <option value="Luna">Luna (Female)</option>
+              <option value="Willow">Willow (Female)</option>
+              <option value="Lauren">Lauren (Female)</option>
+              <option value="Sierra">Sierra (Female)</option>
+              <option value="Noah">Noah (Male)</option>
+              <option value="Jasper">Jasper (Male)</option>
+              <option value="Caleb">Caleb (Male)</option>
+              <option value="Ronan">Ronan (Male)</option>
+              <option value="Ethan">Ethan (Male)</option>
+              <option value="Daniel">Daniel (Male)</option>
+              <option value="Zane">Zane (Male)</option>
+            </optgroup>
+            <optgroup label="🇨🇳 Chinese">
+              <option value="Mei">Mei (Female)</option>
+              <option value="Lian">Lian (Female)</option>
+              <option value="Ting">Ting (Female)</option>
+              <option value="Jing">Jing (Female)</option>
+              <option value="Wei">Wei (Male)</option>
+              <option value="Jian">Jian (Male)</option>
+              <option value="Hao">Hao (Male)</option>
+              <option value="Sheng">Sheng (Male)</option>
+            </optgroup>
+            <optgroup label="🇪🇸 Spanish">
+              <option value="Lucía">Lucía (Female)</option>
+              <option value="Mateo">Mateo (Male)</option>
+              <option value="Javier">Javier (Male)</option>
+            </optgroup>
+            <optgroup label="🇫🇷 French">
+              <option value="Élodie">Élodie (Female)</option>
+            </optgroup>
+            <optgroup label="🇮🇳 Hindi">
+              <option value="Ananya">Ananya (Female)</option>
+              <option value="Priya">Priya (Female)</option>
+              <option value="Arjun">Arjun (Male)</option>
+              <option value="Rohan">Rohan (Male)</option>
+            </optgroup>
+            <optgroup label="🇮🇹 Italian">
+              <option value="Giulia">Giulia (Female)</option>
+              <option value="Luca">Luca (Male)</option>
+            </optgroup>
+            <optgroup label="🇵🇹 Portuguese">
+              <option value="Camila">Camila (Female)</option>
+              <option value="Thiago">Thiago (Male)</option>
+              <option value="Rafael">Rafael (Male)</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <button id="save-button" class="save-button">
+        <i class="fas fa-check"></i> Save Settings
+      </button>
+
+      <div id="status-message" class="status-message"></div>
+
+      <div class="api-link">
+        <a href="https://unrealspeech.com/dashboard" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-external-link-alt"></i> Get your API key here
+        </a>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="voice-selection">Voice Selection</label>
-    <select id="voice-selection">
-      <optgroup label="American English">
-        <option value="Autumn">Autumn (Female)</option>
-        <option value="Melody">Melody (Female)</option>
-        <option value="Hannah">Hannah (Female)</option>
-        <option value="Emily">Emily (Female)</option>
-        <option value="Ivy">Ivy (Female)</option>
-        <option value="Kaitlyn">Kaitlyn (Female)</option>
-        <option value="Luna">Luna (Female)</option>
-        <option value="Willow">Willow (Female)</option>
-        <option value="Lauren">Lauren (Female)</option>
-        <option value="Sierra">Sierra (Female)</option>
-        <option value="Noah">Noah (Male)</option>
-        <option value="Jasper">Jasper (Male)</option>
-        <option value="Caleb">Caleb (Male)</option>
-        <option value="Ronan">Ronan (Male)</option>
-        <option value="Ethan">Ethan (Male)</option>
-        <option value="Daniel">Daniel (Male)</option>
-        <option value="Zane">Zane (Male)</option>
-      </optgroup>
-      <optgroup label="Chinese">
-        <option value="Mei">Mei (Female)</option>
-        <option value="Lian">Lian (Female)</option>
-        <option value="Ting">Ting (Female)</option>
-        <option value="Jing">Jing (Female)</option>
-        <option value="Wei">Wei (Male)</option>
-        <option value="Jian">Jian (Male)</option>
-        <option value="Hao">Hao (Male)</option>
-        <option value="Sheng">Sheng (Male)</option>
-      </optgroup>
-      <optgroup label="Spanish">
-        <option value="Lucía">Lucía (Female)</option>
-        <option value="Mateo">Mateo (Male)</option>
-        <option value="Javier">Javier (Male)</option>
-      </optgroup>
-      <optgroup label="French">
-        <option value="Élodie">Élodie (Female)</option>
-      </optgroup>
-      <optgroup label="Hindi">
-        <option value="Ananya">Ananya (Female)</option>
-        <option value="Priya">Priya (Female)</option>
-        <option value="Arjun">Arjun (Male)</option>
-        <option value="Rohan">Rohan (Male)</option>
-      </optgroup>
-      <optgroup label="Italian">
-        <option value="Giulia">Giulia (Female)</option>
-        <option value="Luca">Luca (Male)</option>
-      </optgroup>
-      <optgroup label="Portuguese">
-        <option value="Camila">Camila (Female)</option>
-        <option value="Thiago">Thiago (Male)</option>
-        <option value="Rafael">Rafael (Male)</option>
-      </optgroup>
-    </select>
-  </div>
-  <button id="save-button">Save</button>
-  <p style="font-size: 18px;">Get apikey from <a href="https://unrealspeech.com/dashboard">here</a></p>
+  
   <script src="options.js"></script>
 </body>
 </html>
