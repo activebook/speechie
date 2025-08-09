@@ -530,19 +530,25 @@ function formatTime(seconds) {
 // Handle messages from background script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "requestSelectedText") {
+    const progressInfo = document.getElementById('speechie-progress-info');
+    if (progressInfo) progressInfo.textContent = 'Processing...';
     const selectedText = window.getSelection().toString().trim();
     sendResponse({ text: selectedText });
     return true;
   }
 
   if (request.action === "showPlayerLoading") {
-    createFloatingPlayer();
-    const progressInfo = document.getElementById('speechie-progress-info');
-    if (progressInfo) progressInfo.textContent = 'Processing...';
+    if (!speechiePlayer) {
+      createFloatingPlayer();
+      const progressInfo = document.getElementById('speechie-progress-info');
+      if (progressInfo) progressInfo.textContent = 'Processing...';
+    }
   }
 
   if (request.action === "audioReady") {
-    if (!speechiePlayer) createFloatingPlayer();
+    if (!speechiePlayer) {
+      createFloatingPlayer();
+    }
     
     speechieAudio.src = request.audioUrl;
     const progressInfo = document.getElementById('speechie-progress-info');
@@ -551,15 +557,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === "audioFailed") {
-    if (!speechiePlayer) createFloatingPlayer();
+    if (!speechiePlayer) {
+      createFloatingPlayer();
+    }
     const progressInfo = document.getElementById('speechie-progress-info');
     if (progressInfo) progressInfo.textContent = 'Failed to load audio';
   }
 
   if (request.action === "noTextSelected") {
-    if (!speechiePlayer) createFloatingPlayer();
-    const progressInfo = document.getElementById('speechie-progress-info');
-    if (progressInfo) progressInfo.textContent = 'No text selected';
+    if (!speechiePlayer) {
+      createFloatingPlayer();
+      const progressInfo = document.getElementById('speechie-progress-info');
+      if (progressInfo) progressInfo.textContent = 'No text selected';
+    }
     setTimeout(() => {
       if (speechiePlayer) {
         speechiePlayer.remove();
