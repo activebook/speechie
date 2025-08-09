@@ -468,6 +468,7 @@ function setupDragFunctionality() {
 
 function dragStart(e) {
   const player = document.getElementById('speechie-floating-player');
+  if (!player) return;
   
   if (e.type === "touchstart") {
     initialX = e.touches[0].clientX - xOffset;
@@ -490,6 +491,8 @@ function savePosition() {
 
 function dragEnd(e) {
   const player = document.getElementById('speechie-floating-player');
+  if (!player) return;
+  
   initialX = currentX;
   initialY = currentY;
   isDragging = false;
@@ -500,7 +503,7 @@ function dragEnd(e) {
 function drag(e) {
   const player = document.getElementById('speechie-floating-player');
   
-  if (isDragging) {
+  if (isDragging && player) {
     e.preventDefault();
     
     if (e.type === "touchmove") {
