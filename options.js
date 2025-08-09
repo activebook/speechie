@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const voiceSelection = document.getElementById("voice-selection");
   const saveButton = document.getElementById("save-button");
   const statusMessage = document.getElementById("status-message");
+  const togglePasswordBtn = document.getElementById("toggle-password");
+  const togglePasswordIcon = togglePasswordBtn.querySelector('i');
 
   // Load saved settings
   chrome.storage.sync.get(["apiKey", "voice"], (result) => {
@@ -95,6 +97,27 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       apiKeyInput.style.borderColor = '';
     }
+  });
+
+  // Password visibility toggle
+  togglePasswordBtn.addEventListener("click", () => {
+    const type = apiKeyInput.getAttribute("type") === "password" ? "text" : "password";
+    apiKeyInput.setAttribute("type", type);
+    
+    // Toggle eye icon
+    if (type === "password") {
+      togglePasswordIcon.className = "fas fa-eye";
+      togglePasswordBtn.setAttribute("aria-label", "Show password");
+    } else {
+      togglePasswordIcon.className = "fas fa-eye-slash";
+      togglePasswordBtn.setAttribute("aria-label", "Hide password");
+    }
+    
+    // Add subtle animation
+    togglePasswordBtn.style.transform = 'translateY(-50%) rotate(180deg)';
+    setTimeout(() => {
+      togglePasswordBtn.style.transform = 'translateY(-50%) rotate(0deg)';
+    }, 200);
   });
 
   // Add focus effects

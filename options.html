@@ -96,11 +96,12 @@
       transform: translateY(-50%);
       color: #667eea;
       font-size: 16px;
+      z-index: 2;
     }
 
-    input[type="text"], select {
+    input[type="text"], input[type="password"], select {
       width: 100%;
-      padding: 15px 15px 15px 45px;
+      padding: 15px 45px 15px 45px;
       border: 2px solid #e1e5e9;
       border-radius: 12px;
       font-size: 16px;
@@ -108,11 +109,40 @@
       background: #fafbfc;
     }
 
-    input[type="text"]:focus, select:focus {
+    input[type="text"]:focus, input[type="password"]:focus, select:focus {
       outline: none;
       border-color: #667eea;
       background: white;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #667eea;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .toggle-password:hover {
+      color: #764ba2;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .toggle-password:active {
+      transform: translateY(-50%) scale(0.9);
     }
 
     select {
@@ -260,7 +290,10 @@
         <label for="api-key">API Key</label>
         <div class="input-wrapper">
           <i class="fas fa-key input-icon"></i>
-          <input type="text" id="api-key" placeholder="Enter your UnrealSpeech API key">
+          <input type="password" id="api-key" placeholder="Enter your UnrealSpeech API key">
+          <button type="button" id="toggle-password" class="toggle-password" aria-label="Toggle password visibility">
+            <i class="fas fa-eye"></i>
+          </button>
         </div>
       </div>
 
