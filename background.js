@@ -114,5 +114,17 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     try {
       await chrome.tabs.sendMessage(tab.id, { action: "togglePlayPause" });
     } catch (e) { /* Fail silently if the player isn't open */ }
+  } else if (command === "show_player") {
+    try {
+      // Show the floating player without processing text
+      await chrome.tabs.sendMessage(tab.id, { action: "showPlayerLoading" });
+    } catch (error) {
+      if (error.message.includes("Receiving end does not exist")) {
+        showNotification("script-error", "Speechie Error", "Cannot run on this page. Please reload the page and try again.", true);
+      } else {
+        console.error("Speechie show player error:", error);
+        showNotification("tts-error", "Speechie Error", "An unknown error occurred.");
+      }
+    }
   }
 });
