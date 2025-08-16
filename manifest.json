@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Speechie",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Select text and press Alt+T to trigger text-to-speech.",
   "permissions": [
     "activeTab",

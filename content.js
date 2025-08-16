@@ -67,7 +67,7 @@ function createFloatingPlayer() {
               <path d="M8 5v14l11-7z"/>
             </svg>
             <svg id="speechie-pause-icon" class="speechie-hidden" viewBox="0 0 24 24">
-              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              <path d="M6 19h4V5H6v14zm8-14v14h4V6h-4z"/>
             </svg>
           </button>
           <button class="speechie-next-btn" id="speechie-next-btn" title="Next 5s">
@@ -651,13 +651,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "noTextSelected") {
     if (!speechiePlayer) {
       createFloatingPlayer();
-      const progressInfo = document.getElementById('speechie-progress-info');
-      if (progressInfo) progressInfo.textContent = 'No text selected';
     }
+    const progressInfo = document.getElementById('speechie-progress-info');
+    if (progressInfo) progressInfo.textContent = 'No text selected';
     setTimeout(() => {
       if (speechiePlayer) {
-        speechiePlayer.remove();
-        speechiePlayer = null;
+        //speechiePlayer.remove();
+        //speechiePlayer = null;
+        if (progressInfo) progressInfo.textContent = 'No text selected';
       }
     }, 3000);
   }
