@@ -8,7 +8,7 @@
 set -euo pipefail
 
 # Configuration
-EXTENSION_NAME="copilot_sidebar"
+EXTENSION_NAME="speechie"
 GITHUB_REPO="${GITHUB_REPO:-$(git config --get remote.origin.url | sed -E 's/.*github\.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/' | sed 's/\.git$//')}"
 
 # Colors for output
@@ -176,15 +176,19 @@ create_release() {
     
     log "Creating GitHub release for version $version..."
     
-    # Get commit messages since last tag
-    local last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+    # Get the previous tag (not the current one we just created)
+    local last_tag=$(git describe --tags --abbrev=0 HEAD~ 2>/dev/null || echo "")
     local changelog=""
     
     if [[ -n "$last_tag" ]]; then
+        log "Getting commits since tag: $last_tag"
         changelog=$(git log --pretty=format:"- %s" "$last_tag"..HEAD)
     else
+        log "No previous tag found, getting last 10 commits"
         changelog=$(git log --pretty=format:"- %s" --max-count=10)
     fi
+
+    log "Changelog: $changelog"
     
     # Create release notes
     local release_notes="## Release $version
