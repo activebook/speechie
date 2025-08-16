@@ -7,6 +7,8 @@ let initialX = 0;
 let initialY = 0;
 let xOffset = 0;
 let yOffset = 0;
+let currentPlaybackRate = 1.0; // Store the current playback rate
+let currentAudioUrl = null; // Store the current audio URL for download
 
 // Load saved position
 function loadSavedPosition() {
@@ -83,6 +85,11 @@ function createFloatingPlayer() {
           <label for="speechie-speed-slider">Speed:</label>
           <input type="range" class="speechie-speed-slider" id="speechie-speed-slider" min="0.5" max="2.5" step="0.1" value="1" aria-label="Playback speed">
           <span class="speechie-speed-label" id="speechie-speed-label">1.0x</span>
+          <button class="speechie-download-btn" id="speechie-download-btn" title="Download Audio">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -288,8 +295,30 @@ function createFloatingPlayer() {
         fill: currentColor;
       }
 
-
-
+      .speechie-download-btn {
+        background: none;
+        border: none;
+        color: #667eea;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+      }
+      
+      .speechie-download-btn:hover {
+        background-color: rgba(102, 126, 234, 0.1);
+      }
+      
+      .speechie-download-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+      
       .speechie-speed-control {
         display: flex;
         align-items: center;
@@ -377,6 +406,11 @@ function setupPlayerControls() {
   const speedLabel = document.getElementById('speechie-speed-label');
   const playIcon = document.getElementById('speechie-play-icon');
   const pauseIcon = document.getElementById('speechie-pause-icon');
+  const downloadBtn = document.getElementById('speechie-download-btn'); // New download button
+
+  // Set the initial value of the speed slider and label
+  speedSlider.value = currentPlaybackRate;
+  speedLabel.textContent = `${currentPlaybackRate}x`;
 
   // Play/Pause functionality
   playBtn.addEventListener('click', () => {
@@ -399,14 +433,22 @@ function setupPlayerControls() {
 
   // Progress bar click
   progressContainer.addEventListener('click', (e) => {
-    const rect = progressContainer.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    speechieAudio.currentTime = percent * speechieAudio.duration;
+    // Check if audio is loaded and has valid duration before setting currentTime
+    if (speechieAudio && speechieAudio.duration && isFinite(speechieAudio.duration)) {
+      const rect = progressContainer.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      // Ensure percent is between 0 and 1
+      const clampedPercent = Math.min(1, Math.max(0, percent));
+      speechieAudio.currentTime = clampedPercent * speechieAudio.duration;
+    }
   });
 
   // Speed control
   speedSlider.addEventListener('input', (e) => {
-    speechieAudio.playbackRate = parseFloat(e.target.value);
+    currentPlaybackRate = parseFloat(e.target.value);
+    if (speechieAudio) {
+      speechieAudio.playbackRate = currentPlaybackRate;
+    }
     speedLabel.textContent = `${e.target.value}x`;
   });
 
@@ -423,6 +465,32 @@ function setupPlayerControls() {
     }
   });
 
+  // Download functionality
+  downloadBtn.addEventListener('click', () => {
+    if (currentAudioUrl) {
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = currentAudioUrl;
+      link.download = 'speechie-audio.mp3'; // Set default filename
+      link.target = '_blank';
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // If no audio URL is available, show a message
+      const progressInfo = document.getElementById('speechie-progress-info');
+      if (progressInfo) {
+        const originalText = progressInfo.textContent;
+        progressInfo.textContent = 'No audio to download';
+        setTimeout(() => {
+          progressInfo.textContent = originalText;
+        }, 2000);
+      }
+    }
+  });
+
   // Audio event listeners
   speechieAudio.addEventListener('play', () => {
     playIcon.classList.add('speechie-hidden');
@@ -435,15 +503,20 @@ function setupPlayerControls() {
   });
 
   speechieAudio.addEventListener('loadedmetadata', () => {
-    totalTimeEl.textContent = formatTime(speechieAudio.duration);
-    progressInfo.textContent = `${formatTime(0)} / ${formatTime(speechieAudio.duration)}`;
+    if (speechieAudio.duration && isFinite(speechieAudio.duration)) {
+      totalTimeEl.textContent = formatTime(speechieAudio.duration);
+      progressInfo.textContent = `${formatTime(0)} / ${formatTime(speechieAudio.duration)}`;
+    }
   });
 
   speechieAudio.addEventListener('timeupdate', () => {
-    const percent = (speechieAudio.currentTime / speechieAudio.duration) * 100;
-    progressFill.style.width = `${percent}%`;
-    currentTimeEl.textContent = formatTime(speechieAudio.currentTime);
-    progressInfo.textContent = `${formatTime(speechieAudio.currentTime)} / ${formatTime(speechieAudio.duration)}`;
+    // Check if duration is valid before calculating percent
+    if (speechieAudio.duration && isFinite(speechieAudio.duration) && speechieAudio.currentTime && isFinite(speechieAudio.currentTime)) {
+      const percent = (speechieAudio.currentTime / speechieAudio.duration) * 100;
+      progressFill.style.width = `${percent}%`;
+      currentTimeEl.textContent = formatTime(speechieAudio.currentTime);
+      progressInfo.textContent = `${formatTime(speechieAudio.currentTime)} / ${formatTime(speechieAudio.duration)}`;
+    }
   });
 
   speechieAudio.addEventListener('ended', () => {
@@ -550,10 +623,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       createFloatingPlayer();
     }
     
-    speechieAudio.src = request.audioUrl;
-    const progressInfo = document.getElementById('speechie-progress-info');
-    if (progressInfo) progressInfo.textContent = 'Ready';
-    speechieAudio.play();
+    // Check if audioUrl is valid before setting it
+    if (request.audioUrl) {
+      speechieAudio.src = request.audioUrl;
+      currentAudioUrl = request.audioUrl; // Store the audio URL for download
+      speechieAudio.playbackRate = currentPlaybackRate; // Apply the stored playback rate to the new audio
+      const progressInfo = document.getElementById('speechie-progress-info');
+      if (progressInfo) progressInfo.textContent = 'Ready';
+      speechieAudio.play().catch(e => {
+        console.error("Speechie: Error playing audio:", e);
+        if (progressInfo) progressInfo.textContent = 'Failed to play audio';
+      });
+    } else {
+      const progressInfo = document.getElementById('speechie-progress-info');
+      if (progressInfo) progressInfo.textContent = 'No audio available';
+    }
   }
 
   if (request.action === "audioFailed") {
