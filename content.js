@@ -525,6 +525,18 @@ function setupPlayerControls() {
     progressFill.style.width = '0%';
     currentTimeEl.textContent = '0:00';
   });
+
+  speechieAudio.addEventListener('canplaythrough', () => {
+    console.log("Audio can play through.");
+  });
+
+  speechieAudio.addEventListener('playing', () => {
+    console.log("Audio is playing.");
+    const playBtn = document.getElementById('speechie-play-btn');
+    if (playBtn) {
+      playBtn.focus();
+    }
+  });
 }
 
 function setupDragFunctionality() {
